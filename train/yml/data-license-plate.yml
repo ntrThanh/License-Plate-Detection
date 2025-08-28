@@ -1,0 +1,6 @@
+path: 'dataset'
+train: 'license-plate/images/train'
+val: 'license-plate/images/val'
+
+nc: 2
+names: ['BSD', 'BSV']

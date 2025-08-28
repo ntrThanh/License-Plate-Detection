@@ -1,0 +1,9 @@
+dataset/
+
+/runs/detect/yolo detects characters in license plate
+/runs/detect/yolo detects characters in license plate2
+/runs/detect/yolo detects characters in license plate3
+/runs/detect/yolo detects characters in license plate4
+/runs/detect/yolo detects characters in license plate5
+/runs/detect/yolo detects characters in license plate6
+__pycache__/
