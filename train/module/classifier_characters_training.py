@@ -11,7 +11,8 @@ from torchvision.transforms import transforms
 from model.model_cnn import ClassifierNumber
 
 
-if __name__ == '__main__':
+def train(epochs = 30):
+    print('Training classifier characters model')
     path_to_dataset = './dataset/CNN letter Dataset/'
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -56,7 +57,6 @@ if __name__ == '__main__':
         best_accuracy = checkpoint['best_accuracy']
         print(f'[INFO] Resuming from epoch {start_epoch} and best accuracy {best_accuracy}.')
 
-    epochs = 50
     for epoch in range(start_epoch, epochs):
         model.train()
 

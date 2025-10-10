@@ -1,14 +1,15 @@
 import argparse
 import os
 
-import cv2
+import cv2   
 import torch
-import torchvision
+import torchvision 
 from ultralytics import YOLO
 
 import model.model_cnn
 import model_function
 from model_function import categories
+from train.module.classifier_characters_training import train
 
 softmax = torch.nn.Softmax(dim=1)
 
@@ -93,6 +94,9 @@ def detect_use_image(image_path):
 
 if __name__ == '__main__':
     arguments = get_args()
+
+    if not os.listdir('./checkpoint').__contains__('best_character_classification.pth'):
+        train(30)
 
     if arguments.image and arguments.path_image:
         list_license = detect_use_image(arguments.path_image)
