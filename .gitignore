@@ -2,4 +2,6 @@ dataset/
 /runs
 checkpoint/
 __pycache__/
-
+.venv/
+.gitignore
+..gitignore.swp
