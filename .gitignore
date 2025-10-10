@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 .gitignore
 ..gitignore.swp
+checkpoint/best_character_classification.pth
