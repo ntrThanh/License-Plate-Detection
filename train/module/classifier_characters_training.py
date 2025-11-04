@@ -15,9 +15,10 @@ def train(epochs = 30):
     print('Training classifier characters model')
     path_to_dataset = './dataset/CNN letter Dataset/'
     transform = transforms.Compose([
-        transforms.ToTensor(),
+        transforms.Grayscale(num_output_channels=1),
         transforms.Resize((128, 128)),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        transforms.ToTensor(),
+        transforms.Normalize((0.5,), (0.5,)),
     ])
 
     dataset = ImageFolder(root=path_to_dataset, transform=transform)
@@ -102,3 +103,7 @@ def train(epochs = 30):
             best_accuracy = accuracy
             torch.save(checkpoint, best_model_path)
             print(f'[INFO] Saving best model at epoch {epoch} and accuracy {best_accuracy}.]')
+
+
+if __name__ == '__main__':
+    train()

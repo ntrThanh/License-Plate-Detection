@@ -1,17 +1,11 @@
 import argparse
-import os
 
-import cv2   
-import torch
-import torchvision 
+import cv2
 from ultralytics import YOLO
+from model_function import license_plate_to_text
+import torch
+import numpy as np
 
-import model.model_cnn
-import model_function
-from model_function import categories
-from train.module.classifier_characters_training import train
-
-softmax = torch.nn.Softmax(dim=1)
 
 def get_args():
     parser = argparse.ArgumentParser(description='Program detects license plates')
@@ -35,12 +29,11 @@ def print_decor(character):
 
     print('\n')
 
+
 def get_model():
-    model_CNN = model.model_cnn.ClassifierNumber(num_classes=len(os.listdir('./dataset/CNN letter Dataset')))
-    model_CNN.load_state_dict(torch.load('checkpoint/best_character_classification.pth', map_location=torch.device('cpu'))['state_dict'])
-    return (YOLO('checkpoint/best_detect_license.pt'),
-            YOLO('checkpoint/best_detect_character.pt'),
-            model_CNN)
+    return (YOLO('runs/detect/yolo detects license plate/weights/best.pt'),
+            YOLO('runs/detect/yolo detects characters in license plate7/weights/best_detect_character.pt'))
+
 
 def resize_keep_ratio(image, target_height=64):
     h, w = image.shape[:2]
@@ -49,54 +42,50 @@ def resize_keep_ratio(image, target_height=64):
     resized = cv2.resize(image, (new_w, target_height))
     return resized
 
+
+def get_class_character(cls_id):
+    if cls_id == 0:
+        pass
+    dic = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: 'A', 11: 'B', 12: 'C',
+           13: 'D', 14: 'E', 15: 'F', 16: 'G', 17: 'H', 18: 'K', 19: 'L', 20: 'M', 21: 'L', 22: 'P', 23: 'T', 24: 'U',
+           25: 'V', 26: 'X', 27: 'R', 28: 'Z', 29: 'N', 30: '0', 31: 'P', 32: 'W', 33: 'Q', 34: 'Y', 35: 'S'}
+    return dic[cls_id + 1]
+
+
 def detect_use_image(image_path):
-    p1, p2, p3, p4 = None, None, None, None
     list_license = []
-    model1, model2, model3 = get_model()
+    model1, model2 = get_model()
 
     image = cv2.imread(image_path)
     image_detected_license_plate = model1(image)
 
     for box in image_detected_license_plate[0].boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
-        p1, p2, p3, p4 = x1, y1, x2, y2
-
         image_crop = image[y1:y2, x1:x2]
         image_crop = resize_keep_ratio(image_crop, 100)
         image_detect = model2(image_crop)
 
+        boxes_characters = []
         labels_characters = []
-        for x in image_detect[0].boxes:
-            a1, b1, a2, b2 = map(int, x.xyxy[0])
 
-            crop = image_crop[b1:b2, a1:a2]
-            crop_resized = cv2.resize(crop, (75, 100))
-            cv2.imshow('crop', crop_resized)
-            cv2.waitKey(0)
-            cv2.destroyAllWindows()
-            tensor_crop = torchvision.transforms.ToTensor()(crop_resized).unsqueeze(0)
+        for char_box in image_detect[0].boxes:
+            x1_c, y1_c, x2_c, y2_c = map(float, char_box.xyxy[0])
+            cls_id = int(char_box.cls[0])
+            label = get_class_character(cls_id)
 
-            with torch.no_grad():
-                result = model3(tensor_crop)
+            boxes_characters.append([x1_c, y1_c, x2_c, y2_c])
+            labels_characters.append(label)
 
-                result_softmax = softmax(result)
-                prediction = torch.argmax(result_softmax).item()
-                character = categories[prediction]
-                labels_characters.append(character)
-        output = model_function.license_plate_to_text(image_detect[0].boxes.xyxy, labels_characters)
-        list_license.append(output)
+        boxes_tensor = torch.tensor(np.array(boxes_characters), dtype=torch.float32)
+
+        license_text = license_plate_to_text(boxes_tensor, labels_characters)
+        list_license.append(license_text)
 
     return list_license
 
 
-# def detect_use_camera():
-#     model1, model2, model3 = get_model()
-
 if __name__ == '__main__':
     arguments = get_args()
-
-    if not os.listdir('./checkpoint').__contains__('best_character_classification.pth'):
-        train(30)
 
     if arguments.image and arguments.path_image:
         list_license = detect_use_image(arguments.path_image)

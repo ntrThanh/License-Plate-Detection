@@ -32,7 +32,7 @@ Benefit of this program is:
 ## Pipeline
 
 ```text
-Input -> Yolo -> CNN -> K-means -> Result
+Input -> Yolo -> Yolo Classified Letter -> K-means -> Result
 ```
 
 ## Install

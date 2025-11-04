@@ -1,6 +1,6 @@
 from torch import nn
 
-def make_blocks(input_channels, output_channels, use_dropout = False):
+def make_blocks(input_channels, output_channels, use_dropout=False):
     layers = [
         nn.Conv2d(input_channels, output_channels, kernel_size=3, padding=1),
         nn.BatchNorm2d(output_channels),
@@ -21,10 +21,11 @@ class ClassifierNumber(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
 
-        self.cnn1 = make_blocks(3, 64, use_dropout = True)
-        self.cnn2 = make_blocks(64, 128, use_dropout = True)
-        self.cnn3 = make_blocks(128, 256, use_dropout = True)
-        self.cnn4 = make_blocks(256, 512, use_dropout = True)
+        # 🔹 Sửa lại đầu vào thành 1 kênh (ảnh trắng đen)
+        self.cnn1 = make_blocks(1, 64, use_dropout=True)
+        self.cnn2 = make_blocks(64, 128, use_dropout=True)
+        self.cnn3 = make_blocks(128, 256, use_dropout=True)
+        self.cnn4 = make_blocks(256, 512, use_dropout=True)
 
         self.cnn5 = nn.Sequential(
             nn.Conv2d(512, 512, kernel_size=3, padding=1),
@@ -45,7 +46,6 @@ class ClassifierNumber(nn.Module):
             nn.ReLU(),
             nn.Linear(128, num_classes)
         )
-
 
     def forward(self, x):
         x = self.cnn1(x)
