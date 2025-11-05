@@ -8,7 +8,6 @@ categories = os.listdir('./dataset/CNN letter Dataset')
 def license_plate_to_text(image_plate: torch.Tensor, characters_labels):
     result = []
     num_chars = image_plate.shape[0]
-    # filter license plate in Vietnam
     if not (8 <= num_chars <= 9):
         return 'Unknown'
 
@@ -42,4 +41,4 @@ def license_plate_to_text(image_plate: torch.Tensor, characters_labels):
         for idx in bottom_indices:
             result.append((characters_labels[idx]))
 
-    return ''.join(str(result))
+    return result

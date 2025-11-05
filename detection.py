@@ -32,24 +32,29 @@ def print_decor(character):
 
 def get_model():
     return (YOLO('runs/detect/yolo detects license plate/weights/best.pt'),
-            YOLO('runs/detect/yolo detects characters in license plate7/weights/best_detect_character.pt'))
+            YOLO('checkpoint/best_yolo_classified/best.pt'))
 
 
-def resize_keep_ratio(image, target_height=64):
-    h, w = image.shape[:2]
-    scale = target_height / h
-    new_w = int(w * scale)
-    resized = cv2.resize(image, (new_w, target_height))
-    return resized
+# def resize_keep_ratio(image, target_height=64):
+#     h, w = image.shape[:2]
+#     scale = target_height / h
+#     new_w = int(w * scale)
+#     resized = cv2.resize(image, (new_w, target_height))
+#     return resized
+
+def up_constraint_threshold(image):
+    gray_image  = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = cv2.threshold(gray_image, 120, 255, cv2.THRESH_TRUNC)
+
+    return image
+
 
 
 def get_class_character(cls_id):
-    if cls_id == 0:
-        pass
-    dic = {0: '0', 1: '1', 2: '2', 3: '3', 4: '4', 5: '5', 6: '6', 7: '7', 8: '8', 9: '9', 10: 'A', 11: 'B', 12: 'C',
-           13: 'D', 14: 'E', 15: 'F', 16: 'G', 17: 'H', 18: 'K', 19: 'L', 20: 'M', 21: 'L', 22: 'P', 23: 'T', 24: 'U',
-           25: 'V', 26: 'X', 27: 'R', 28: 'Z', 29: 'N', 30: '0', 31: 'P', 32: 'W', 33: 'Q', 34: 'Y', 35: 'S'}
-    return dic[cls_id + 1]
+    dic = {0: '1', 1: '2', 2: '3', 3: '4', 4: '5', 5: '6', 6: '7', 7: '8', 8: '9', 9: 'A', 10: 'B', 11: 'C', 12: 'D', 13: 'E',
+     14: 'F', 15: 'G', 16: 'H', 17: 'K', 18: 'L', 19: 'M', 20: 'N', 21: 'P', 22: 'S', 23: 'T', 24: 'U', 25: 'V',
+     26: 'X', 27: 'Y', 28: 'Z', 29: '0', 30: 'J', 31: 'Q', 32: 'R', 33: 'W', 34: 'I'}
+    return dic[cls_id]
 
 
 def detect_use_image(image_path):
@@ -61,8 +66,17 @@ def detect_use_image(image_path):
 
     for box in image_detected_license_plate[0].boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0])
+
+        cv2.rectangle(image, (x1, y1), (x2, y2), (255, 0, 0), 2)
         image_crop = image[y1:y2, x1:x2]
-        image_crop = resize_keep_ratio(image_crop, 100)
+        # image_crop = resize_keep_ratio(image_crop, 100)
+
+        image_crop = image[y1:y2, x1:x2]
+
+        if image_crop.size == 0:
+            continue  # bỏ qua nếu crop lỗi
+        image_crop = cv2.resize(image_crop, (64, 64))  # hoặc resize_keep_ratio(image_crop, 100)
+
         image_detect = model2(image_crop)
 
         boxes_characters = []
@@ -79,7 +93,16 @@ def detect_use_image(image_path):
         boxes_tensor = torch.tensor(np.array(boxes_characters), dtype=torch.float32)
 
         license_text = license_plate_to_text(boxes_tensor, labels_characters)
-        list_license.append(license_text)
+        string_text = ''
+        for i in range(len(license_text)):
+            string_text += license_text[i]
+
+        cv2.putText(image, string_text, (x1 - 15, y1 - 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+        list_license.append(string_text)
+
+    cv2.imshow('image', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
     return list_license
 
@@ -91,3 +114,4 @@ if __name__ == '__main__':
         list_license = detect_use_image(arguments.path_image)
         for x in list_license:
             print(x)
+
