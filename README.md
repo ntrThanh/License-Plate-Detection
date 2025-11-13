@@ -11,14 +11,15 @@ correct position after detect characters and finally is how to recognize all bac
 
 The technologies used in this project include Yolo architecture to detect license plates and characters within them,
 convolutional
-neuron network to classify each character. I used K-means Algorithm to split rows if there are more than
+neuron network to classify each character. I used K-means algorithm or other algorithm to split rows if there are more
+than
 one row and then arrange characters in the correct position.
 
 Frameworks used are:
-`Pytorch`,
+`PyTorch`,
 `OpenCV`,
-`Scikit learn`,
-`Yolo v11`
+`Scikit Learn`,
+`YOLO v11`
 
 ## Benefit
 
@@ -48,13 +49,13 @@ cd detection-license-plate
 
 ```commandline
 python -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate 
 ```
 
 #### Install required packages
 
 ```commandline
-pip install -r requirements.txt
+pip install -r requirement.txt
 ```
 
 ## User manual
@@ -64,7 +65,7 @@ Run program, you can run by `CLI` or use function `detect_use_image(image_path)`
 #### Use command line interface
 
 ```commandline
-python detection.py -i -p <path_to_file>
+python detection_cli.py -i -p <path_to_file>
 ```
 
 **Arguments:**
@@ -98,6 +99,7 @@ This is a example:
 - If you have idea, please tell me via email: **nguyentrongthanh672@gmail.com**.
 
 ## Reference
+
 - https://docs.ultralytics.com/vi/
 - https://pytorch.org/
 - https://scikit-learn.org/stable/user_guide.html
