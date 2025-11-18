@@ -3,7 +3,9 @@ import cv2
 from detection import DetectionLicensePlate
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Program detects license plates')
+    parser = argparse.ArgumentParser(
+        description='Program detects license plates'
+    )
 
     parser.add_argument(
         '--image',
@@ -137,4 +139,9 @@ if __name__ == '__main__':
         use_camera(model)
 
     else:
-        print("Please provide input: --image / --video / --camera")
+        print(
+            "Please provide input: "
+            "--image / "
+            "--video / "
+            "--camera"
+        )

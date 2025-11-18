@@ -47,7 +47,6 @@ def train(epochs = 30):
     start_epoch = 0
     best_accuracy = 0
 
-
     # handle resume training
     if os.path.exists(last_check_point):
         print(f'[INFO] Found checkpoint at {last_check_point}. Resuming training from checkpoint.]')

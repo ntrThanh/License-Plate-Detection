@@ -1,11 +1,25 @@
 from torch import nn
 
-def make_blocks(input_channels, output_channels, use_dropout=False):
+def make_blocks(
+        input_channels,
+        output_channels,
+        use_dropout=False
+):
     layers = [
-        nn.Conv2d(input_channels, output_channels, kernel_size=3, padding=1),
+        nn.Conv2d(
+            input_channels,
+            output_channels,
+            kernel_size=3,
+            padding=1
+        ),
         nn.BatchNorm2d(output_channels),
         nn.ReLU(),
-        nn.Conv2d(output_channels, output_channels, kernel_size=3, padding=1),
+        nn.Conv2d(
+            output_channels,
+            output_channels,
+            kernel_size=3,
+            padding=1
+        ),
         nn.BatchNorm2d(output_channels),
         nn.ReLU(),
         nn.MaxPool2d(kernel_size=2, stride=2),
@@ -22,13 +36,34 @@ class ClassifierNumber(nn.Module):
         super().__init__()
 
         # Sửa lại đầu vào thành 1 kênh (ảnh trắng đen)
-        self.cnn1 = make_blocks(1, 64, use_dropout=True)
-        self.cnn2 = make_blocks(64, 128, use_dropout=True)
-        self.cnn3 = make_blocks(128, 256, use_dropout=True)
-        self.cnn4 = make_blocks(256, 512, use_dropout=True)
+        self.cnn1 = make_blocks(
+            1,
+            64,
+            use_dropout=True
+        )
+        self.cnn2 = make_blocks(
+            64,
+            128,
+            use_dropout=True
+        )
+        self.cnn3 = make_blocks(
+            128,
+            256,
+            use_dropout=True
+        )
+        self.cnn4 = make_blocks(
+            256,
+            512,
+            use_dropout=True
+        )
 
         self.cnn5 = nn.Sequential(
-            nn.Conv2d(512, 512, kernel_size=3, padding=1),
+            nn.Conv2d(
+                512,
+                512,
+                kernel_size=3,
+                padding=1
+            ),
             nn.BatchNorm2d(512),
             nn.ReLU(),
             nn.AdaptiveAvgPool2d((4, 4)),
