@@ -77,6 +77,30 @@ python detection_cli.py arguments
 - `-cdt`, `--checkpoint-detect`: Path to the YOLO detection checkpoint.
 - `cclf`, `--checkpoint-classify`: Path to the YOLO classification checkpoint.
 
+#### Use API
+
+```python
+import cv2
+
+from detection import DetectionLicensePlate
+
+if __name__ == '__main__':
+    path_image = 'path/to/image.png'
+    image = cv2.imread(path_image)
+
+    model = DetectionLicensePlate(
+        checkpoint_detect='path/to/checkpoint_detect',
+        checkpoint_classify='path/to/checkpoint_classify_letter'
+    )
+
+    image_out = model.detect(image)[1]
+    # You can custom with function model.get_boxes_and_labels(image) -> boxes and labels
+    
+    cv2.imshow('Image detected', image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+```
+
 ## Example
 
 These are examples:
