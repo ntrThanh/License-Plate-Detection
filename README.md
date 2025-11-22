@@ -7,11 +7,11 @@ yellow, blue, white,etc..
 The problem here is how to detect this, detect character on this, how to arrange these characters in
 correct position after detect characters and finally is how to recognize all background color of license plate.
 
-## My solution
+## Our solution
 
 The technologies used in this project include Yolo architecture to detect license plates and characters within them,
 convolutional
-neuron network to classify each character. I used K-means algorithm or other algorithm to split rows if there are more
+neuron network to classify each character. We used K-means algorithm or other algorithm to split rows if there are more
 than
 one row and then arrange characters in the correct position.
 
