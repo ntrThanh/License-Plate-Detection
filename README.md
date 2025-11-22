@@ -144,6 +144,13 @@ The model now performs robustly on various types of license plates and diverse b
 
 - If you have any ideas or contributions, feel free to contact me at: nguyentrongthanh672@gmail.com
 
+## Contributor
+| **Họ và tên**         | **MSSV**   | **Email**                 |
+|------------------------|------------|----------------------------|
+| Nguyễn Trọng Thành     | 23001934   | 23001934@hus.edu.vn        |
+| Nguyễn Thành Tâm       | 23001929   | 23001929@hus.edu.vn        |
+| Mạc Văn Tường          | 23001951   | 23001951@hus.edu.vn        |
+
 ## Reference
 
 - https://docs.ultralytics.com/vi/
