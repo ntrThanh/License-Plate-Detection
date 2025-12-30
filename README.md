@@ -1,4 +1,4 @@
-# Detection license plate (version Vietnam)
+# License Plate Detection (version Vietnam)
 
 ## Problem
 
